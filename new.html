@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartMedAlert – Нұсқаулық</title>
+<style>
+  :root {
+    --primary-color: #fff8e1;          /* Ақшыл сары фон */
+    --secondary-color: #fff3cd;        /* Ашық сары элементтер үшін */
+    --accent-color: #ffb300;           /* Негізгі сары акцент */
+    --text-color: #3e2723;             /* Қара-қоңыр мәтін */
+    --code-bg: #fff8dc;                /* Код аймағы үшін ашық фон */
+    --border-color: #fdd835;           /* Сары шекара */
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  header {
+    position: relative;
+    background: url('image.png') center/cover no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  header::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(255, 236, 179, 0.85);
+    z-index: 0;
+  }
+
+  header h1 {
+    z-index: 1;
+    font-size: 3.5em;
+    color: var(--accent-color);
+    margin-bottom: 10px;
+  }
+
+  header p {
+    z-index: 1;
+    font-size: 1.5em;
+    color: #5d4037;
+  }
+
+  nav {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+  }
+
+  .menu-icon {
+    width: 35px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .menu-icon span {
+    background: var(--accent-color);
+    height: 4px;
+    border-radius: 2px;
+  }
+
+  .dropdown {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 3;
+  }
+
+  .dropdown a {
+    color: var(--text-color);
+    display: block;
+    margin-bottom: 10px;
+    text-decoration: none;
+  }
+
+  .dropdown a:hover {
+    color: var(--accent-color);
+  }
+
+  main {
+    padding: 40px 20px;
+    max-width: 960px;
+    margin: auto;
+  }
+
+  h2 {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    font-size: 1.8em;
+    margin-top: 40px;
+  }
+
+  section {
+    margin-bottom: 50px;
+  }
+
+  code {
+    background-color: var(--code-bg);
+    color: var(--text-color);
+    padding: 15px;
+    display: block;
+    white-space: pre-wrap;
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 8px;
+    font-size: 15px;
+    border-left: 5px solid var(--accent-color);
+  }
+
+  img {
+    max-width: 100%;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+</style></head>
+<body>
+  <header>
+    <nav>
+      <div class="menu-icon" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div id="menu" class="dropdown">
+        <a href="#desc">Құрылғы сипаттамасы</a>
+        <a href="#circuit">Жұмыс істеу нұсқаулығы</a>
+        <a href="#code">Ардуино коды</a>
+        <a href="#setup">Орнату нұсқаулығы</a>
+        <a href="#usage">Қолдану нұсқаулығы</a>
+      </div>
+    </nav>
+    <h1>SmartMedAlert</h1>
+    <p>Денсаулығыңды қазірден бастап ойла!</p>
+  </header>
+  <main>
+    <section id="desc">
+      <h2>Құрылғы сипаттамасы</h2>
+      <p>SmartMedAlert – бұл дәрі-дәрмекті уақытында қабылдауды еске салатын ақылды құрылғы.</p>
+    </section>
+    <section id="circuit">
+      <h2>Жұмыс істеу нұсқаулығы</h2>
+      <p>Құрылғы нақты уақытты көрсететін сағат модулімен (RTC) жабдықталған және алдын ала орнатылған уақыт келгенде пайдаланушыға дәрі ішу керектігін дыбыстық сигнал (зуммер), жарық индикаторы (LED) арқылы ескертеді. Бұл құрылғы адамның дәріні ұмытпай қабылдауына көмектесіп, ем-шараның тиімділігін арттырады.</p>
+    </section>
+    <section id="code">
+      <h2>Ардуиноға арналған код</h2>
+      <p>Төменде құрылғыны басқаратын толық Arduino коды берілген:</p>
+      <code>#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+#include &lt;RTClib.h&gt;
+#include &lt;SoftwareSerial.h&gt;
+
+#define BUZZER 4
+#define LED 13
+#define BUTTON_CONFIRM 2
+#define BUTTON_MENU 3
+
+// Нота жиіліктері (Гц)
+int melody[] = {
+  262, 294, 330, 349, 392, 440, 494, 523  // C, D, E, F, G, A, B, C
+};
+
+// Әр нота үшін уақыт (миллисекундпен)
+int noteDuration = 400;
+
+SoftwareSerial BT(6, 7);  // Bluetooth RX, TX
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // ЖК дисплей
+RTC_DS3231 rtc;
+
+struct Medicine {
+  String name;
+  String time;
+  int quantity;
+  bool taken;
+};
+
+Medicine meds[5];  // 5 дәрі сақтау үшін массив
+int totalMeds = 0;
+int currentMenuIndex = 0;
+bool alertActive = false;
+unsigned long alertStartTime = 0;
+unsigned long lastButtonPress = 0;
+
+void setup() {
+  Wire.begin();
+  lcd.init();
+  lcd.backlight();
+
+  pinMode(BUZZER, OUTPUT);
+  pinMode(LED, OUTPUT);
+  pinMode(BUTTON_CONFIRM, INPUT);
+  pinMode(BUTTON_MENU, INPUT);
+
+  Serial.begin(115200);
+  BT.begin(9600);
+
+  if (!rtc.begin()) {
+    lcd.print("RTC ERROR!");
+    while (1);
+  }
+
+  lcd.setCursor(0, 0);
+  lcd.print("Medicine Reminder");
+  delay(2000);
+  lcd.clear();
+
+  // Мысал ретінде дәрілерді қосу
+  addMedicine("Paracetamol", "16:34", 1);
+  addMedicine("Ibuprofen", "16:24", 2);
+}
+
+void loop() {
+  showTimeAndDate();  // Күн мен уақытты көрсету
+  checkButtons();
+  checkBluetooth();
+  checkTime();  // Дәрінің уақытысы болған кезде тексеру
+}
+
+void addMedicine(String name, String time, int quantity) {
+  if (totalMeds < 5) {
+    meds[totalMeds].name = name;
+    meds[totalMeds].time = time;
+    meds[totalMeds].quantity = quantity;
+    meds[totalMeds].taken = false;
+    totalMeds++;
+  }
+}
+
+void showMedicines() {
+  DateTime now = rtc.now();
+  char currentTime[6]; 
+  sprintf(currentTime, "%02d:%02d", now.hour(), now.minute());
+
+  lcd.clear();  // Экранды тазалау
+  lcd.setCursor(0, 0);  // Экранның жоғарғы бөлігіндегі жолға жазу
+
+  bool found = false; // Уақыт болған кезде дәріні табуды тексеру үшін
+
+  // Дәрілер тізімін тексеру
+  for (int i = 0; i < totalMeds; i++) {
+    if (meds[i].time.equals(String(currentTime)) && !meds[i].taken) {
+      // Егер дәрінің уақыты келсе, оның атауын, санын және уақытын көрсету
+      lcd.print("Take: ");
+      lcd.print(meds[i].name);  // Дәрінің атауы
+      lcd.setCursor(0, 1);  // Экранның екінші жолына өту
+      lcd.print("Q: ");
+      lcd.print(meds[i].quantity);  // Таблетка саны
+
+      lcd.setCursor(9, 1);  // Уақытты оң жақта көрсету
+      lcd.print("Time: ");
+      lcd.print(meds[i].time);  // Дәрінің уақыты
+
+      found = true;  // Дәрі табылды деп белгілеу
+      meds[i].taken = true;  // Дәрі қабылданды деп белгілеу
+      break;  // Бірінші дәріні ғана көрсету
+    }
+  }
+
+  if (!found) {  // Егер дәрі қабылданатын уақыт болмаса
+    lcd.print("No medicine now");
+  }
+  
+  delay(2000);  // 2 секунд күтіп жаңарту
+}
+
+void showTimeAndDate() {
+  DateTime now = rtc.now();
+  
+  char currentTime[6]; 
+  sprintf(currentTime, "%02d:%02d", now.hour(), now.minute());
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Date:");
+  lcd.print(now.day());
+  lcd.print("/"); 
+  lcd.print(now.month());
+  lcd.print("/");
+  lcd.print(now.year());
+
+  lcd.setCursor(0, 1);  // Қазіргі уақыттың астында
+  lcd.print("Time:");
+  lcd.print(currentTime);  // Қазіргі уақыт
+  delay(1000);  // 1 секунд сайын жаңарту
+}
+
+void checkButtons() {
+  delay(50);
+  unsigned long currentMillis = millis();
+  int buttonConfirmState = digitalRead(BUTTON_CONFIRM);
+  int buttonMenuState = digitalRead(BUTTON_MENU);
+
+  // Кнопканы басқанда қабылданған дәріні белгілеу
+  if (buttonConfirmState == HIGH && alertActive) {
+    alertActive = false;  // Тревога өшіріледі
+    meds[currentMenuIndex].taken = true;  // Дәрі қабылданды деп белгілеу
+
+    // Зуммер мен светодиодты өшіру
+    digitalWrite(BUZZER, LOW);
+    digitalWrite(LED, LOW);
+
+    lcd.clear();
+    lcd.print("Taken: ");
+    lcd.print(meds[currentMenuIndex].name);  // Қабылданған дәрі
+    delay(2000);
+  }
+
+  // Дәрілер тізімін ауыстыру үшін менюге бару
+  if (buttonMenuState == HIGH && currentMillis - lastButtonPress > 200) {
+    lastButtonPress = currentMillis;
+    currentMenuIndex = (currentMenuIndex + 1) % totalMeds;
+    showMedicines();
+  }
+}
+
+void checkBluetooth() {
+  if (BT.available()) {
+    String command = BT.readStringUntil('\n');  // Bluetooth арқылы команданы оқу
+    command.trim();  // Қажетсіз бос орындарды жою
+
+    if (command.startsWith("ADD")) {
+      // ADD командасын өңдеу
+      if (totalMeds < 5) {
+        int split1 = command.indexOf(",");
+        int split2 = command.indexOf(",", split1 + 1);
+        
+        meds[totalMeds].name = command.substring(4, split1);  // Дәрінің атауы
+        meds[totalMeds].time = command.substring(split1 + 1, split2);  // Дәрінің уақыты
+        meds[totalMeds].quantity = command.substring(split2 + 1).toInt();  // Таблетка саны
+        meds[totalMeds].taken = false;  // Дәрі қабылданбаған деп белгілеу
+        
+        totalMeds++;  // Дәрі қосылды
+
+        // Телефонға жауап жіберу
+        BT.println("Medicine Added");  // Хабарлама жіберу
+        Serial.println("Medicine Added");
+      }
+    }
+  }
+}
+
+void checkTime() {
+  DateTime now = rtc.now();
+  
+  char currentTime[6]; 
+  sprintf(currentTime, "%02d:%02d", now.hour(), now.minute());
+
+  for (int i = 0; i < totalMeds; i++) {
+    if (meds[i].time.equals(String(currentTime)) && !meds[i].taken && !alertActive) {
+      alertUser(meds[i].name);
+    }
+  }
+}
+
+void alertUser(String medName) {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Take: ");
+  lcd.print(medName);
+  
+  alertActive = true;
+  alertStartTime = millis();
+  while (alertActive) {
+    // Жағымды естілетін мелодия
+    for (int i = 0; i < 8; i++) {
+      tone(BUZZER, melody[i]);  // Әр нота ойнау
+      delay(noteDuration);      // Нотаға тоқтау беру
+      noTone(BUZZER);           // Дыбысты тоқтату
+      delay(100);               // Әр нота арасында үзіліс
+    }
+    checkButtons();  // Кнопкаларды тексеру
+  }
+}
+</code>
+    </section>
+    <section id="setup">
+      <h2>Қадамдық нұсқаулық – Кодты орнату</h2>
+      <ol>
+        <li>Компьютер немесе ноутбукке Arduino IDE қосымшасын жүктеп алыңыз.</li>
+        <li>Жаңа файл ашып, жоғарыдағы кодты қойыңыз.</li>
+        <li><code>addMedicine("Paracetamol", "13:07", 1);
+addMedicine("Ibuprofen", "13:06", 2);</code> қатарын өз дәріңізге сай өзгертіңіз.</li>
+        <li>"Правка" мәзірінен "Загрузка" батырмасын басыңыз.</li>
+        <li>Құрылғыны қосқаннан кейін ақпарат ЖК дисплейде шығады.</li>
+      </ol>
+    </section>
+    <section id="usage">
+      <h2>Қолдану нұсқаулығы</h2>
+      <ol>
+        <li>Дәрінің уақытысы келсе, ол ЖК экранда шығып, зуммер дыбыс шығарады және светодиод жанады.</li>
+        <li>1-кнопка (confirm) – зуммер мен светодиодты өшіреді, "Taken" деген жазу шығады.</li>
+        <li>2-кнопка (menu) – дәрілер тізімін көрсетеді.</li>
+      </ol>
+    </section>
+  </main>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
